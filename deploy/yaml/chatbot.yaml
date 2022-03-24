@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: classifier-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: classifier
+  template:
+    metadata:
+      labels:
+        app: classifier
+    spec:
+      containers:
+      - name: classifier
+        #image: mcclow12/chatbot-prod:classifier-v2
+        #image: mcclow12/chatbot:classifier-local
+        image: mcclow12/chatbot-prod:classifier-v3
+        ports:
+        - containerPort: 8080
+---        
+apiVersion: v1
+kind: Service
+metadata:
+  name: classifier-service
+  namespace: default
+  labels:
+    app: classifier
+spec:
+  type: ClusterIP
+  clusterIP: 10.105.46.162
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: classifier
+  selector:
+    app: classifier
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-server
+  template:
+    metadata:
+      labels:
+        app: nginx-server
+    spec:
+      containers:
+      - name: nginx-html
+        #image: mcclow12/chatbot-prod:nginx-web-v8
+        #image: mcclow12/chatbot:nginx-web-local2
+        image: mcclow12/chatbot-prod:nginx-web-dns-v4
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 32M
+            cpu: 5m
+          limits:
+            memory: 64M
+            cpu: 10m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-server-service
+  namespace: default
+  labels:
+    app: chatbot
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30001
+    protocol: TCP
+    name: nginx-server
+  selector:
+    app: nginx-server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommender-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommender
+  template:
+    metadata:
+      labels:
+        app: recommender
+    spec:
+      containers:
+      - name: nginx-html
+        #image: mcclow12/chatbot-prod:recommender-v1
+        #image: mcclow12/chatbot:recommender-local
+        image: mcclow12/chatbot-prod:recommender-v2
+        ports:
+        - containerPort: 100
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recommender-service
+  namespace: default
+  labels:
+    app: recommender
+spec:
+  type: ClusterIP
+  clusterIP: 10.100.200.216
+  ports:
+  - port: 100
+    targetPort: 100
+    protocol: TCP
+    name: recommender
+  selector:
+    app: recommender
