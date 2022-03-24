@@ -4,7 +4,9 @@ __pycache__/
 *$py.class
 
 # model archive
-.mar
+*.bin
+*.onnx
+*.mar
 
 # C extensions
 *.so

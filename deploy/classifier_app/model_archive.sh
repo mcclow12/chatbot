@@ -1,0 +1,1 @@
+torch-model-archiver --model-name OnnxClassifier --version 1.0 --serialized-file Transformer_model/model-quantized.onnx --handler ./Transformer_handler_generalized.py --extra-files  "Transformer_model/config.json,./setup_config.json,./index_to_name.json"
