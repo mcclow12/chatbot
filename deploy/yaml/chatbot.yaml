@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: classifier-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: classifier
@@ -14,11 +14,16 @@ spec:
     spec:
       containers:
       - name: classifier
-        #image: mcclow12/chatbot-prod:classifier-v2
-        #image: mcclow12/chatbot:classifier-local
         image: mcclow12/chatbot-prod:classifier-v3
         ports:
         - containerPort: 8080
+          #        resources:
+          #          requests:
+          #            memory: 3G
+          #            cpu: 1500m
+          #          limits:
+          #            memory: 3.4G
+          #            cpu: 1500m
 ---        
 apiVersion: v1
 kind: Service
@@ -43,7 +48,7 @@ kind: Deployment
 metadata:
   name: nginx-server-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: nginx-server
@@ -54,18 +59,16 @@ spec:
     spec:
       containers:
       - name: nginx-html
-        #image: mcclow12/chatbot-prod:nginx-web-v8
-        #image: mcclow12/chatbot:nginx-web-local2
-        image: mcclow12/chatbot-prod:nginx-web-dns-v4
+        image: mcclow12/chatbot-prod:nginx-web-dns-v5
         ports:
         - containerPort: 80
         resources:
-          requests:
-            memory: 32M
-            cpu: 5m
-          limits:
-            memory: 64M
-            cpu: 10m
+                #          requests:
+                #            memory: 2M
+                #            cpu: 5m
+                #          limits:
+                #            memory: 10M
+                #            cpu: 10m
 ---
 apiVersion: v1
 kind: Service
@@ -90,7 +93,7 @@ kind: Deployment
 metadata:
   name: recommender-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: recommender
@@ -101,11 +104,16 @@ spec:
     spec:
       containers:
       - name: nginx-html
-        #image: mcclow12/chatbot-prod:recommender-v1
-        #image: mcclow12/chatbot:recommender-local
         image: mcclow12/chatbot-prod:recommender-v2
         ports:
         - containerPort: 100
+          #        resources:
+          #          requests:
+          #            memory: 32M
+          #            cpu: 5m
+          #          limits:
+          #            memory: 64M
+          #            cpu: 10m
 ---
 apiVersion: v1
 kind: Service
