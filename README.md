@@ -2,7 +2,7 @@
 
 This repository contains the code for a movie chatbot web service deployed on AWS. The deployed chatbot can be found here: http://willsmoviechatbot.com/ (Currently, only Android is supported on mobile.)
 
-The chatbot is deployed on a small Kubernetes cluster made up of three EC2 instances (one master, two workers). Currently, the cluster runs three services, each containing two pods. 
+The chatbot is deployed on a small Kubernetes cluster made up of three EC2 instances (one master, two workers). At this time, the cluster runs three services, each containing two pods. 
 
 ## System Design And Implementation
 ![Image](.img/k8s_cluster.png)
